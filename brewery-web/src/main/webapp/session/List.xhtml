@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="Sessions list"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+             <b:container>
+            <b:row>
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="No sessions" rendered="#{sessionController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{sessionController.items.rowCount > 0}">
+                    <h:outputText value="#{sessionController.pagination.pageFirstItem + 1}..#{sessionController.pagination.pageLastItem + 1}/#{sessionController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{sessionController.previous}" value="#{bundle.Previous} #{sessionController.pagination.pageSize}" rendered="#{sessionController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{sessionController.next}" value="#{bundle.Next} #{sessionController.pagination.pageSize}" rendered="#{sessionController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{sessionController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="ID"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Device"/>
+                            </f:facet>
+                            <h:outputText value="#{item.device}"/>
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Name"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Active"/>
+                            </f:facet>
+                            <h:outputText value="#{item.active}"/>
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{sessionController.prepareView}" value="Session view"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{sessionController.prepareEdit}" value="Session edit"/>
+                            
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{sessionController.destroy}" value="Delete session"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{sessionController.prepareCreate}" value="Create session"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="Index"/>
+            </h:form>
+            
+            </b:row>
+            </b:container>
+        </ui:define>
+    </ui:composition>
+
+</html>

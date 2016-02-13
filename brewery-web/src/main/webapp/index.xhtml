@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"    
+      xmlns:b="http://bootsfaces.net/ui"
+
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Brewery</title>
+
+    </h:head>
+    <h:body> 
+        <ui:composition template="template.xhtml">
+            <ui:define name="body">
+                <style>
+                    .state_images {
+                        margin-bottom: 30px;
+                        text-align: center;
+                    }
+                    .img-responsive {
+                        margin: 0 auto;
+                    }
+
+                </style>
+                <script>
+                    function extender() {
+                        this.cfg.series.forEach(function (entry) {
+                            entry.markerOptions.show = false;
+                        });
+                        this.cfg.axes.yaxis.tickOptions = {
+                            formatString: "%#.2f"
+                        };
+                    }
+
+                </script>
+
+                <b:jumbotron>
+                    <b:container>
+                        <h1>Brewery</h1>
+                        <b:row class="state_images">
+                            <b:column col-xs="12" col-sm="6" >
+                                <img src="#{request.contextPath}/faces/images/ckt.jpg" class="img-circle img-responsive" alt="CKT" width="300" /> 
+
+                                <h4><h:outputText value="#{sessionController.currentMeasuredRecord.val} °C" title="tempMeasured"/></h4>
+
+                                <span class="text-muted"><h:outputText value="#{sessionController.timeAgo(sessionController.currentMeasuredRecord.datetime)}" title="tempMeasured"/></span><br/>
+                                <span class="text-muted"><h:outputText value="#{sessionController.currentMeasuredRecord.datetime}" title="tempMeasured"/></span>
+                            </b:column>
+
+                            <b:column col-xs="12" col-sm="6">
+                                <img src="#{request.contextPath}/faces/images/varna.jpg" class="img-circle img-responsive" alt="varna" width="300" /> 
+                            </b:column>
+
+                        </b:row>
+                    </b:container>
+                </b:jumbotron>
+                <b:container>
+                    <c:forEach var="item" items="#{sessionController.activeSessions}">
+                        <p:chart type="line" model="#{sessionController.dateModel(item)}" responsive="true"/>
+                    </c:forEach>
+                </b:container>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+

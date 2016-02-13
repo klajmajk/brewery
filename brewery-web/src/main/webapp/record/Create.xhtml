@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:b="http://bootsfaces.net/ui">>
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateRecordTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+             <b:container>
+            <b:row>
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateRecordLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{recordController.selected.id}" title="#{bundle.CreateRecordTitle_id}" />
+                    <h:outputLabel value="#{bundle.CreateRecordLabel_datetime}" for="datetime" />
+                    <h:inputText id="datetime" value="#{recordController.selected.datetime}" title="#{bundle.CreateRecordTitle_datetime}" >
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.CreateRecordLabel_name}" for="name" />
+                    <h:inputText id="name" value="#{recordController.selected.name}" title="#{bundle.CreateRecordTitle_name}" />
+                    <h:outputLabel value="#{bundle.CreateRecordLabel_val}" for="val" />
+                    <h:inputText id="val" value="#{recordController.selected.val}" title="#{bundle.CreateRecordTitle_val}" />
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{recordController.create}" value="#{bundle.CreateRecordSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{recordController.prepareList}" value="#{bundle.CreateRecordShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateRecordIndexLink}"/>
+            </h:form>
+            
+            </b:row>
+            </b:container>
+        </ui:define>
+    </ui:composition>
+
+</html>

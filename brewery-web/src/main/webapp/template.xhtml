@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Brewery</title>
+        <meta name="author" content="The Author"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    </h:head>
+    <!-- Add 50px padding top to the body for the navbar -->
+    <h:body style="padding-top: 50px; padding-bottom: 20px;">
+        <b:navBar brand="Brewery" brandHref="#" inverse="true" fixed="top">
+            <b:navbarLinks>
+                <b:navLink value="Home" outcome="/index"></b:navLink>
+                <b:navLink outcome="/device/List" value="Devices"></b:navLink>
+                <b:navLink outcome="/record/List" value="Records"></b:navLink>
+                <b:navLink outcome="/session/List" value="Sessions"></b:navLink>
+            </b:navbarLinks>
+
+        </b:navBar>
+        <ui:insert name="body">
+            <!--PAGE CONTENT GOES HERE -->
+        </ui:insert>
+
+        <b:container>
+
+            <footer>
+                <p>© Klajmajk 2016</p>
+            </footer>
+        </b:container>
+
+    </h:body>
+</html>
+<!--<b:navBar brand="Project name" brandHref="#" fixed="top" inverse="true">
+    <b:navbarLinks>
+        <b:navLink value="Home" outcome="/index"></b:navLink>
+        <b:navLink outcome="/device/List" value="Devices"></b:navLink>
+        <b:navLink outcome="/record/List" value="Records"></b:navLink>
+        <b:navLink outcome="/session/List" value="Sessions"></b:navLink>
+    </b:navbarLinks>
+</b:navBar>
+
+
+    <ui:insert name="body">
+        PAGE CONTENT GOES HERE 
+    </ui:insert>-->
+

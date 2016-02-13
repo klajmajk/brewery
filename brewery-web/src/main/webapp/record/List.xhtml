@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListRecordTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+             <b:container>
+            <b:row>
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListRecordEmpty}" rendered="#{recordController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{recordController.items.rowCount > 0}">
+                    <h:outputText value="#{recordController.pagination.pageFirstItem + 1}..#{recordController.pagination.pageLastItem + 1}/#{recordController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{recordController.previous}" value="#{bundle.Previous} #{recordController.pagination.pageSize}" rendered="#{recordController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{recordController.next}" value="#{bundle.Next} #{recordController.pagination.pageSize}" rendered="#{recordController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{recordController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListRecordTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListRecordTitle_datetime}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.datetime}">
+                                <f:convertDateTime pattern="d.MMMM yyyy H:mm" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListRecordTitle_name}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Type"/>
+                            </f:facet>
+                            <h:outputText value="#{item.type}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListRecordTitle_val}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.val}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{recordController.prepareView}" value="#{bundle.ListRecordViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{recordController.prepareEdit}" value="#{bundle.ListRecordEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{recordController.destroy}" value="#{bundle.ListRecordDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{recordController.prepareCreate}" value="#{bundle.ListRecordCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListRecordIndexLink}"/>
+            </h:form>
+            
+            </b:row>
+            </b:container>
+        </ui:define>
+    </ui:composition>
+
+</html>
