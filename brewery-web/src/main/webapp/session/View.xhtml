@@ -16,6 +16,7 @@
         <ui:define name="body">
             <b:container>
                 <b:row>
+                    <h1>Session view</h1>
                     <h:panelGroup id="messagePanel" layout="block">
                         <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                     </h:panelGroup>
@@ -32,10 +33,10 @@
 
                         </script>
                         <p:chart type="line" model="#{sessionController.dateModel}"/>
-                        <h:panelGrid columns="2">
+                        <!--h:panelGrid columns="2">
                             <h:outputText value="Temperature Measured:"/>
-                            <h:outputText value="#{sessionController.currentMeasuredRecord.val}" title="tempMeasured"/>
-                        </h:panelGrid>
+                            <h:outputText value="sessionController.currentMeasuredRecord.val}" title="tempMeasured"/>
+                        </h:panelGrid-->
                         <br />
                         <h:commandLink action="#{sessionController.destroyAndView}" value="Delete session"/>
                         <br />

@@ -2,16 +2,12 @@ package cz.klajmajk;
 
 import cz.klajmajk.entities.Device;
 import cz.klajmajk.ejbs.DeviceFacade;
+import cz.klajmajk.scheduler.SchedulerBean;
 import cz.klajmajk.util.JsfUtil;
 import cz.klajmajk.util.PaginationHelper;
 
 import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIComponent;
@@ -31,6 +27,8 @@ public class DeviceController implements Serializable {
     private DataModel items = null;
     @Inject
     private cz.klajmajk.ejbs.DeviceFacade ejbFacade;
+    @Inject
+    private SchedulerBean schedulerBean;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
@@ -87,7 +85,8 @@ public class DeviceController implements Serializable {
 
     public String create() {
         try {
-            getFacade().create(current);
+            getFacade().create(current);            
+            schedulerBean.init();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DeviceCreated"));
             return prepareCreate();
         } catch (Exception e) {
@@ -105,6 +104,7 @@ public class DeviceController implements Serializable {
     public String update() {
         try {
             getFacade().edit(current);
+            schedulerBean.init();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DeviceUpdated"));
             return "View";
         } catch (Exception e) {
@@ -137,7 +137,8 @@ public class DeviceController implements Serializable {
 
     private void performDestroy() {
         try {
-            getFacade().remove(current);
+            getFacade().remove(current);            
+            schedulerBean.init();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DeviceDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));

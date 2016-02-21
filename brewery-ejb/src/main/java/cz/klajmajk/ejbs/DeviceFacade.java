@@ -6,8 +6,10 @@
 package cz.klajmajk.ejbs;
 
 import cz.klajmajk.entities.Device;
+import cz.klajmajk.scheduler.SchedulerBean;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -29,5 +31,24 @@ public class DeviceFacade extends AbstractFacade<Device> {
     public DeviceFacade() {
         super(Device.class);
     }
+
+    @Override
+    public void remove(Device entity) {
+        super.remove(entity); 
+    }
+
+    @Override
+    public void edit(Device entity) {
+        super.edit(entity);    
+    }
+
+    @Override
+    public void create(Device entity) {
+        super.create(entity);
+    }
+    
+    
+
+    
     
 }

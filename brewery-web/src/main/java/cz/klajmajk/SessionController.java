@@ -1,5 +1,6 @@
 package cz.klajmajk;
 
+import cz.klajmajk.ejbs.NetworkBean;
 import cz.klajmajk.ejbs.RecordFacade;
 import cz.klajmajk.ejbs.RestConsumerBean;
 import cz.klajmajk.entities.Session;
@@ -26,6 +27,8 @@ import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.ocpsoft.prettytime.TimeUnit;
+import org.ocpsoft.prettytime.units.JustNow;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.DateAxis;
 import org.primefaces.model.chart.LineChartModel;
@@ -45,6 +48,8 @@ public class SessionController implements Serializable {
     private RecordFacade recordFacade;
     @Inject
     private RestConsumerBean restBean;
+    @Inject
+    private NetworkBean networkBean;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
@@ -52,15 +57,24 @@ public class SessionController implements Serializable {
     }
 
     public String timeAgo(Date date) {
-        if(date != null){
-        PrettyTime p = new PrettyTime();
-        return p.format(date);
+        if (date != null) {
+            PrettyTime p = new PrettyTime();
+            for (TimeUnit t : p.getUnits()) {
+                if (t instanceof JustNow) {
+                    ((JustNow) t).setMaxQuantity(1000L);
+                }
+            }
+            String toReturn = p.format(date);
+            if(toReturn.equals("před chvílí")) return "teď";
+            return p.format(date);
+        } else {
+            return "";
         }
-        else return "";
     }
 
-    private Record getLast(Session s) {
-        return restBean.getCurrentByName("tempMeasured");
+    public Record getCurrentMeasuredRecord(long id) {
+        Record record = networkBean.getCurrentByName("tempMeasured", id);
+        return record;
 
     }
 
@@ -75,20 +89,6 @@ public class SessionController implements Serializable {
 
     }
 
-    public Record getCurrentMeasuredRecord() {
-        if (current != null) {
-            return getLast(current);
-        } else {
-            List<Session> sessions = ejbFacade.findAll();
-            for (Session session : sessions) {
-                if (session.isActive()) {
-                    return getLast(session);
-                }
-            }
-        }
-
-        return null;
-    }
 
     public Session getSelected() {
         if (current == null) {
@@ -263,7 +263,6 @@ public class SessionController implements Serializable {
         LineChartSeries systemOnSerie = new LineChartSeries();
         systemOnSerie.setLabel("systemOn");
 
-        
         List<Record> records = recordFacade.findForChart(s, "tempSet");
 
         DateFormat chartFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -286,10 +285,11 @@ public class SessionController implements Serializable {
         return dateModel;
     }
 
-    public LineChartModel getDateModel() {        
+    public LineChartModel getDateModel() {
         return dateModel(current);
 
     }
+
     public LineChartModel dateModel(Session s) {
         if (model == null) {
             model = createDateModel(s);

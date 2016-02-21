@@ -5,6 +5,7 @@
  */
 package cz.klajmajk.ejbs;
 
+import cz.klajmajk.entities.Device;
 import cz.klajmajk.entities.Record;
 import cz.klajmajk.entities.Session;
 import java.util.List;
@@ -74,6 +75,13 @@ public class RecordFacade extends AbstractFacade<Record> {
         List<Record> records = q.getResultList();
         return records;
 
+    }
+    
+    public Record getLastRecord(String name, Device device) {
+        
+        Object result = getEntityManager().createNativeQuery("SELECT record.* FROM record INNER JOIN session ON record.session_id = session.id WHERE record.name = '"+name+"' AND session.device_id = "+device.getId()+" ORDER BY record.datetime DESC LIMIT 1", Record.class).getSingleResult();
+        Record record = (Record) result;
+        return record;
     }
 
 }

@@ -39,16 +39,33 @@
                         <h1>Brewery</h1>
                         <b:row class="state_images">
                             <b:column col-xs="12" col-sm="6" >
-                                <img src="#{request.contextPath}/faces/images/ckt.jpg" class="img-circle img-responsive" alt="CKT" width="300" /> 
+                                <h:form id= "ckt">
+                                    <img src="#{request.contextPath}/faces/images/ckt.jpg" class="img-circle img-responsive" alt="CKT" width="300" /> 
+                                    <h:panelGroup id="rckt">
+                                        <h4><h:outputText value="#{sessionController.getCurrentMeasuredRecord(9301).val} °C" title="tempMeasured"/></h4>
 
-                                <h4><h:outputText value="#{sessionController.currentMeasuredRecord.val} °C" title="tempMeasured"/></h4>
+                                        <span class="text-muted"><h:outputText value="#{sessionController.timeAgo(sessionController.getCurrentMeasuredRecord(9301).datetime)}" title="tempMeasured"/></span><br/>
+                                        <span class="text-muted"><h:outputText value="#{sessionController.getCurrentMeasuredRecord(9301).datetime}" title="tempMeasured"/></span>
+                                    </h:panelGroup>                                    
+                                    <p:poll interval="1" update="ckt:rckt"/>
 
-                                <span class="text-muted"><h:outputText value="#{sessionController.timeAgo(sessionController.currentMeasuredRecord.datetime)}" title="tempMeasured"/></span><br/>
-                                <span class="text-muted"><h:outputText value="#{sessionController.currentMeasuredRecord.datetime}" title="tempMeasured"/></span>
+                                </h:form>
                             </b:column>
 
                             <b:column col-xs="12" col-sm="6">
-                                <img src="#{request.contextPath}/faces/images/varna.jpg" class="img-circle img-responsive" alt="varna" width="300" /> 
+
+                                <h:form id="varna">
+                                    <img src="#{request.contextPath}/faces/images/varna.jpg" class="img-circle img-responsive" alt="varna" width="300" /> 
+                                    <h:panelGroup id="rvarna">
+                                        <h4 ><h:outputText value="#{sessionController.getCurrentMeasuredRecord(17461).val} °C" title="tempMeasured"/></h4>
+
+                                        <span class="text-muted" ><h:outputText   value="#{sessionController.timeAgo(sessionController.getCurrentMeasuredRecord(17461).datetime)}" title="tempMeasured"/></span><br/>
+                                        <span class="text-muted" ><h:outputText  value="#{sessionController.getCurrentMeasuredRecord(17461).datetime}" title="tempMeasured"/></span>
+                                    </h:panelGroup>
+                                    
+                                    <p:poll interval="1" update="varna:rvarna"/>
+
+                                </h:form>
                             </b:column>
 
                         </b:row>

@@ -13,30 +13,41 @@
         </ui:define>
         <ui:define name="body">
             <b:container>
-            <b:row>
-            <h:panelGroup id="messagePanel" layout="block">
-                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-            </h:panelGroup>
-            <h:form>
-                <h:panelGrid columns="2">
-                    <p:outputLabel for="addressId" value="IP:" />
-                    <p:inputText id="addressId" value="#{deviceController.selected.address}" required="true">
+                <b:row>
+                    <h1><h:outputText value="#{bundle.CreateDeviceTitle}"></h:outputText></h1>
+                    <h:panelGroup id="messagePanel" layout="block">
+                        <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                    </h:panelGroup>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel for="addressId" value="IP:" />
+                            <p:inputText id="addressId" value="#{deviceController.selected.address}" required="true"/>                    
 
+                            <p:outputLabel for="nameId" value="Name:" />
+                            <p:inputText id="nameId" value="#{deviceController.selected.name}" required="true" />
+
+                            <p:outputLabel for="refreshRate" value="Refresh rate" />
+                            <p:inputText id="refreshRate" value="#{deviceController.selected.refreshRate}" required="true">
+                                <f:convertNumber integerOnly="true" />
+                            </p:inputText>
+
+                            <p:outputLabel for="persistRate" value="Persist rate:" />
+                            <p:inputText id="persistRate" value="#{deviceController.selected.persistRate}" required="true">
+                                <f:convertNumber integerOnly="true" />
+                            </p:inputText>
+
+                        </h:panelGrid>
+                        <br />
                         
-                    </p:inputText>
-                    <p:outputLabel for="nameId" value="Name:" />
-                    <p:inputText id="nameId" value="#{deviceController.selected.name}" required="true"/>
-                </h:panelGrid>
-                <br />
-                <h:commandLink action="#{deviceController.create}" value="#{bundle.CreateDeviceSaveLink}" />
-                <br />
-                <br />
-                <h:commandLink action="#{deviceController.prepareList}" value="#{bundle.CreateDeviceShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.CreateDeviceIndexLink}"/>
-            </h:form>
-            </b:row>
+                        <b:commandButton value="#{bundle.CreateDeviceSaveLink}" look="primary" action="#{deviceController.create}" />
+                        <br />
+                        <br />
+                        <b:commandButton action="#{deviceController.prepareList}" value="#{bundle.CreateDeviceShowAllLink}" immediate="true" look="primary" />
+                        <br />
+                        <br />
+                        <h:link outcome="/index" value="#{bundle.CreateDeviceIndexLink}"/>
+                    </h:form>
+                </b:row>
             </b:container>
         </ui:define>
     </ui:composition>
