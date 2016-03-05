@@ -76,8 +76,8 @@ public class RestConsumerBean {
         try {
             List<String> records = new ArrayList<>();
             Client client = ClientBuilder.newClient();
-            client.property("jersey.config.client.connectTimeout", 1000);
-            client.property("jersey.config.client.readTimeout", 100);
+            client.property("jersey.config.client.connectTimeout", 4000);
+            client.property("jersey.config.client.readTimeout", 1000);
             WebTarget target = client.target(device.getAddress());
             Response response = target.request(MediaType.APPLICATION_JSON).get();
             if (response.getStatus() == Response.Status.OK.getStatusCode()) { // 200
@@ -94,7 +94,7 @@ public class RestConsumerBean {
                 // do stuff
             } // 
         } catch (Exception e) {
-            System.out.println("Connection error");
+            System.out.println("Connection error: "+e.getMessage());
         }
 
     }

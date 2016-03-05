@@ -24,11 +24,11 @@ import javax.persistence.PersistenceContext;
 @Singleton
 @Stateful
 public class NetworkBean {
-    
+
     @PersistenceContext(unitName = "cz.klajmajk_brewery")
     private EntityManager em;
-    
-     @Inject
+
+    @Inject
     private SessionFacade sessionFacade;
     @Inject
     private RecordFacade recordFacade;
@@ -36,26 +36,28 @@ public class NetworkBean {
     private DeviceFacade deviceFacade;
 
     private final HashMap<Device, List<Record>> recordsByDevice = new HashMap<>();
-    
+
     public Record getCurrentByName(String name, long deviceId) {
-        Device d =deviceFacade.find(deviceId);
-        List<Record> lastRecords = recordsByDevice.get(d);
-        if (lastRecords != null) {
-            for (Record lastRecord : lastRecords) {
-                if (lastRecord.getName().equals(name)) {
-                    return lastRecord;
+        Device d = deviceFacade.find(deviceId);
+        if (d != null) {
+            List<Record> lastRecords = recordsByDevice.get(d);
+            if (lastRecords != null) {
+                for (Record lastRecord : lastRecords) {
+                    if (lastRecord.getName().equals(name)) {
+                        return lastRecord;
+                    }
                 }
             }
+            Record lastFormDB = recordFacade.getLastRecord(name, d);
+            return lastFormDB;
         }
-        Record lastFormDB = recordFacade.getLastRecord(name, d);
-        return lastFormDB;
+        else return null;
     }
 
     public HashMap<Device, List<Record>> getRecordsByDevice() {
         return recordsByDevice;
     }
-    
-    
+
     @Asynchronous
     public void handlePersist(Long deviceId) {
         for (Session session : sessionFacade.findAll()) {
@@ -74,7 +76,5 @@ public class NetworkBean {
             }
         }
     }
-    
-    
-    
+
 }

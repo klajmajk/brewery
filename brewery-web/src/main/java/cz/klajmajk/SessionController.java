@@ -65,7 +65,9 @@ public class SessionController implements Serializable {
                 }
             }
             String toReturn = p.format(date);
-            if(toReturn.equals("před chvílí")) return "teď";
+            if (toReturn.equals("před chvílí")) {
+                return "teď";
+            }
             return p.format(date);
         } else {
             return "";
@@ -88,7 +90,6 @@ public class SessionController implements Serializable {
         return arrayList;
 
     }
-
 
     public Session getSelected() {
         if (current == null) {
@@ -271,7 +272,9 @@ public class SessionController implements Serializable {
         }
         records = recordFacade.findForChart(s, "tempMeasured");
         for (Record record : records) {
-            tempMeasuredSerie.set(chartFormatter.format(record.getDatetime()), record.getVal());
+            if (record.getVal() != -127) {
+                tempMeasuredSerie.set(chartFormatter.format(record.getDatetime()), record.getVal());
+            }
         }
 
         dateModel.addSeries(tempSetSerie);
@@ -291,9 +294,7 @@ public class SessionController implements Serializable {
     }
 
     public LineChartModel dateModel(Session s) {
-        if (model == null) {
-            model = createDateModel(s);
-        }
+        model = createDateModel(s);
         return model;
 
     }

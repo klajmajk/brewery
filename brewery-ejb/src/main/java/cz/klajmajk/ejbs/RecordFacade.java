@@ -12,6 +12,7 @@ import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.Root;
@@ -59,29 +60,37 @@ public class RecordFacade extends AbstractFacade<Record> {
     }
 
     public List<Record> findForChart(Session session, String paramName) {
-        Object result = getEntityManager().createNativeQuery("SELECT reltuples::bigint AS estimate FROM pg_class where relname='record'").getSingleResult();
-        int countEstimate = Math.toIntExact((Long) result);
-        result = getEntityManager().createNativeQuery("select count (*) from (select distinct name from record) as alias").getSingleResult();
-        int namesCount = Math.toIntExact((Long) result);
-        countEstimate = countEstimate/namesCount;
+        //Object result = getEntityManager().createNativeQuery("SELECT reltuples::bigint AS estimate FROM pg_class where relname='record'").getSingleResult();
         
+        Object result = getEntityManager().createNativeQuery("select count(r.id) from record r where r.session_id= "+session.getId()+"").getSingleResult();
+        int countEstimate = Math.toIntExact((Long) result);
+        result = getEntityManager().createNativeQuery("select count (*) from (select distinct r.name from record r where r.session_id = "+session.getId()+") as alias").getSingleResult();
+        int namesCount = Math.toIntExact((Long) result);
+        countEstimate = countEstimate / namesCount;
+        int modBase = countEstimate / 200;
+        if (modBase == 0) modBase = 1;
+
         Query q = getEntityManager().createNativeQuery("select alias.id, alias.datetime, alias. type, alias.val, alias.name \n"
                 + "from (\n"
                 + "	select (row_number() over ()) as rn, r.id, r.datetime, r. type, r.val, r.name \n"
                 + "	from record r\n"
-                + "	where r.name = '"+paramName+"'\n"
+                + "	where r.name = '" + paramName + "' and r.session_id = "+ session.getId()+"\n"
                 + "	)as alias \n"
-                + "where mod(alias.rn,"+countEstimate/100 +")=0",Record.class);
+                + "where mod(alias.rn," + modBase + ")=0", Record.class);
         List<Record> records = q.getResultList();
         return records;
 
     }
-    
+
     public Record getLastRecord(String name, Device device) {
-        
-        Object result = getEntityManager().createNativeQuery("SELECT record.* FROM record INNER JOIN session ON record.session_id = session.id WHERE record.name = '"+name+"' AND session.device_id = "+device.getId()+" ORDER BY record.datetime DESC LIMIT 1", Record.class).getSingleResult();
-        Record record = (Record) result;
-        return record;
+        try {
+            Object result = getEntityManager().createNativeQuery("SELECT record.* FROM record INNER JOIN session ON record.session_id = session.id WHERE record.name = '" + name + "' AND session.device_id = " + device.getId() + " ORDER BY record.datetime DESC LIMIT 1", Record.class).getSingleResult();
+            Record record = (Record) result;
+            return record;
+        } catch (NoResultException e) {
+            return null;
+        }
+
     }
 
 }
