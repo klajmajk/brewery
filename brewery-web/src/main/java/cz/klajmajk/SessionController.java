@@ -294,9 +294,11 @@ public class SessionController implements Serializable {
     }
 
     public LineChartModel dateModel(Session s) {
-        model = createDateModel(s);
-        return model;
-
+        if (s != null) {
+            model = createDateModel(s);
+            return model;
+        }
+        return null;
     }
 
     @FacesConverter(forClass = Session.class)

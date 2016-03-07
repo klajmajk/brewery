@@ -73,7 +73,7 @@
                 </b:jumbotron>
                 <b:container>
                     <c:forEach var="item" items="#{sessionController.activeSessions}">
-                        <p:chart type="line" model="#{sessionController.dateModel(item)}" responsive="true"/>
+                        <p:chart type="line" model="#{chartViewBean.chartModel(item)}" responsive="true"/>
                     </c:forEach>
                 </b:container>
             </ui:define>
