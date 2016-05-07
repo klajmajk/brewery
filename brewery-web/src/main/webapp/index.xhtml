@@ -23,6 +23,8 @@
 
                 </style>
                 <script>
+
+                    var chart;
                     function extender() {
                         this.cfg.series.forEach(function (entry) {
                             entry.markerOptions.show = false;
@@ -30,7 +32,24 @@
                         this.cfg.axes.yaxis.tickOptions = {
                             formatString: "%#.2f"
                         };
+
+                        chart = this;
+
                     }
+
+                    function handleClick(id) {
+                        
+                        chart.plot.series.forEach(function (serie) {
+                            if (serie.label === id) {
+
+                                serie.show = !serie.show;
+                            }
+                        });
+                        chart.plot.replot({ resetAxes: true });
+                    }
+
+
+
 
                 </script>
 
@@ -62,7 +81,7 @@
                                         <span class="text-muted" ><h:outputText   value="#{sessionController.timeAgo(sessionController.getCurrentMeasuredRecord(1746).datetime)}" title="tempMeasured"/></span><br/>
                                         <span class="text-muted" ><h:outputText  value="#{sessionController.getCurrentMeasuredRecord(1746).datetime}" title="tempMeasured"/></span>
                                     </h:panelGroup>
-                                    
+
                                     <p:poll interval="1" update="varna:rvarna"/>
 
                                 </h:form>
@@ -71,8 +90,15 @@
                         </b:row>
                     </b:container>
                 </b:jumbotron>
+
                 <b:container>
                     <c:forEach var="item" items="#{sessionController.activeSessions}">
+                        <b:dropButton value="Series">
+                            <c:forEach var="serie" items="#{chartViewBean.chartModel(item).series}">
+                                <b:selectBooleanCheckbox id="chbox_#{serie.label}" caption="#{serie.label}" onclick="handleClick('#{serie.label}')" value="true"/>
+
+                            </c:forEach>
+                        </b:dropButton>
                         <p:chart type="line" model="#{chartViewBean.chartModel(item)}" responsive="true"/>
                     </c:forEach>
                 </b:container>

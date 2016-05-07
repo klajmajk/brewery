@@ -27,6 +27,7 @@ public class ChartViewBean implements Serializable {
     private HashMap<Session, LineChartModel> map;
     
     
+    
     @PostConstruct
     public void init(){
         map = new HashMap<>();

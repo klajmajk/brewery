@@ -252,35 +252,34 @@ public class SessionController implements Serializable {
         return ejbFacade.find(id);
     }
 
+    public List<String> getRecordNames(Session s){
+        return recordFacade.getAllRecordNamesPerSession(s);
+    }
     private LineChartModel createDateModel(Session s) {
 
+        List<String> names = recordFacade.getAllRecordNamesPerSession(s);
         LineChartModel dateModel = new LineChartModel();
         dateModel.setExtender("extender");
-
-        LineChartSeries tempSetSerie = new LineChartSeries();
-        tempSetSerie.setLabel("tempSet");
-        LineChartSeries tempMeasuredSerie = new LineChartSeries();
-        tempMeasuredSerie.setLabel("tempMeasured");
-        LineChartSeries systemOnSerie = new LineChartSeries();
-        systemOnSerie.setLabel("systemOn");
-
-        List<Record> records = recordFacade.findForChart(s, "tempSet");
+        List<LineChartSeries> series = new ArrayList<>();
 
         DateFormat chartFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        for (Record record : records) {
-            tempSetSerie.set(chartFormatter.format(record.getDatetime()), record.getVal());
-        }
-        records = recordFacade.findForChart(s, "tempMeasured");
-        for (Record record : records) {
-            if (record.getVal() != -127) {
-                tempMeasuredSerie.set(chartFormatter.format(record.getDatetime()), record.getVal());
+        for (String name : names) {
+            LineChartSeries serie = new LineChartSeries();
+            serie.setLabel(name);
+            series.add(serie);
+
+            List<Record> records = recordFacade.findForChart(s, name);
+            for (Record record : records) {
+                if (record.getVal() != -127) {
+                    serie.set(chartFormatter.format(record.getDatetime()), record.getVal());
+                }
             }
         }
 
-        dateModel.addSeries(tempSetSerie);
-        dateModel.addSeries(tempMeasuredSerie);
-        dateModel.addSeries(systemOnSerie);
-        dateModel.getAxis(AxisType.Y).setLabel("Temp");
+        for (LineChartSeries serie : series) {
+            dateModel.addSeries(serie);
+        }
+        dateModel.getAxis(AxisType.Y).setLabel("Temp / IO");
         DateAxis axis = new DateAxis("Time");
         axis.setTickAngle(-50);
         axis.setTickFormat("%a %d. %m. %y %H:%#M:%S");

@@ -58,6 +58,11 @@ public class RecordFacade extends AbstractFacade<Record> {
         q.setFirstResult(range[0]);
         return q.getResultList();
     }
+    
+    public List<String> getAllRecordNamesPerSession(Session session){
+        Query q = getEntityManager().createNativeQuery("select name from (select distinct r.name from record r where r.session_id = "+session.getId()+") as alias");
+        return q.getResultList();
+    }
 
     public List<Record> findForChart(Session session, String paramName) {
         //Object result = getEntityManager().createNativeQuery("SELECT reltuples::bigint AS estimate FROM pg_class where relname='record'").getSingleResult();
@@ -66,11 +71,12 @@ public class RecordFacade extends AbstractFacade<Record> {
         int countEstimate = Math.toIntExact((Long) result);
         result = getEntityManager().createNativeQuery("select count (*) from (select distinct r.name from record r where r.session_id = "+session.getId()+") as alias").getSingleResult();
         int namesCount = Math.toIntExact((Long) result);
-        countEstimate = countEstimate / namesCount;
+        if(namesCount == 0) countEstimate = 0;
+        else countEstimate = countEstimate / namesCount;
         int modBase = countEstimate / 200;
         if (modBase == 0) modBase = 1;
 
-        Query q = getEntityManager().createNativeQuery("select alias.id, alias.datetime, alias. type, alias.val, alias.name \n"
+        Query q = getEntityManager().createNativeQuery("select alias.id, alias.datetime, alias.type, alias.val, alias.name \n"
                 + "from (\n"
                 + "	select (row_number() over ()) as rn, r.id, r.datetime, r. type, r.val, r.name \n"
                 + "	from record r\n"
